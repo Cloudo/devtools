@@ -9,11 +9,14 @@ import { devServer } from './server'
 
 type Mode = 'api' | 'mirage'
 
-const getMode = (): Mode =>
-  (window.localStorage.getItem('dev-mirage') as Mode) || 'api'
-const setMode = (mode: Mode) => window.localStorage.setItem('dev-mirage', mode)
+const getMode = (): Mode => {
+  return (window.localStorage.getItem('dev-mirage') as Mode) || 'api'
+}
+const setMode = (mode: Mode) => {
+  return window.localStorage.setItem('dev-mirage', mode)
+}
 
-const defaultMode = getMode()
+const defaultMode = typeof window === 'undefined' ? 'api' : getMode()
 
 if (defaultMode === 'mirage') {
   import('./server').then((server) =>
