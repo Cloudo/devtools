@@ -1,0 +1,60 @@
+{
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "arrowParens": "always",
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "trailingComma": "es5",
+    "semi": false
+  },
+  "name": "my-devtools",
+  "author": "Nikolay Shevlyakov",
+  "module": "dist/my-devtools.esm.js",
+  "devDependencies": {
+    "@chakra-ui/core": "^0.8.0",
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
+    "@types/lodash": "^4.14.152",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "emotion-theming": "^10.0.27",
+    "husky": "^4.2.5",
+    "lodash": "^4.17.15",
+    "miragejs": "^0.1.40",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "tsdx": "^0.13.2",
+    "tslib": "^2.0.0",
+    "typescript": "^3.9.3",
+    "use-local-storage-state": "^3.0.1"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.15"
+  }
+}
