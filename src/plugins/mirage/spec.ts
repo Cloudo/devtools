@@ -10,7 +10,6 @@ export type Spec = {
 const specs: Spec[] = []
 
 export const getSpecs = () => {
-  console.log('specs', specs)
   return specs
 }
 
@@ -23,7 +22,6 @@ export const getSpec = (options: SpecOptions) => (
   callback: (server: Server) => void
 ) => {
   const id = [options.group, name].join('/')
-  console.log('add spec', id)
 
   specs.push({
     id,
