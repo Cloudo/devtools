@@ -1,6 +1,8 @@
 import { Server } from 'miragejs'
 
-export function makeServer(options: { environment?: 'test' | 'development' }) {
+export function makeServerDefault(options: {
+  environment?: 'test' | 'development'
+}) {
   const { environment = 'test' } = options || {}
 
   return new Server({
@@ -8,7 +10,14 @@ export function makeServer(options: { environment?: 'test' | 'development' }) {
   })
 }
 
+export let makeServer = makeServerDefault
 let server: Server
+
+export const setMakeServer = (
+  makeServerFn: (options: { environment?: 'test' | 'development' }) => Server
+) => {
+  makeServer = makeServerFn
+}
 
 export const devServer = () => {
   if (server) server.shutdown()
