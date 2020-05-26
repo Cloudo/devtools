@@ -12,7 +12,7 @@ export const CustomRadio = React.forwardRef<
   return (
     <Button
       ref={ref}
-      variantColor={isChecked ? 'cyan' : 'gray'}
+      variantColor={isChecked ? 'blue' : 'gray'}
       aria-checked={isChecked}
       role="radio"
       isDisabled={isDisabled}

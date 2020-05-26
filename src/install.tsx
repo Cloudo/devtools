@@ -4,53 +4,70 @@ import ReactDOM from 'react-dom'
 import {
   Button,
   ThemeProvider,
-  useDisclosure,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerContent,
-  DrawerCloseButton,
   theme,
   CSSReset,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  Box,
 } from '@chakra-ui/core'
-import styled from '@emotion/styled'
 import { useMirageDevTools, MirageToogle } from './plugins/mirage'
-
-const DevToolsButton = styled(Button)`
-  /* z-index: 9999; */
-  position: fixed;
-  top: 80px;
-  left: 0;
-  background: white;
-  color: black;
-  padding: 20px;
-  margin: 10px;
-  height: 60px;
-  width: 60px;
-  transition: all 0.3s;
-`
+import { useDevToolsOpen } from './plugins/mirage/const'
 
 function install() {
   function DevTools() {
-    const { isOpen, onClose, onToggle } = useDisclosure()
+    const [isOpen, setIsOpen] = useDevToolsOpen()
+
     const devTools = useMirageDevTools()
     return (
       <ThemeProvider theme={theme}>
         <CSSReset />
-        <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
-          <DrawerContent w="30vw">
-            <DrawerCloseButton />
-            <DrawerHeader>🛠 Dev tools 🛠</DrawerHeader>
+        <Box
+          position="fixed"
+          bottom="0"
+          right="0"
+          zIndex={9990}
+          width="100%"
+          height="500px"
+          mb={isOpen ? 0 : '-500px'}
+          boxShadow="0 0 20px rgba(0,0,0,.3)"
+          transition="all 0.3s"
+          bg="gray.50"
+        >
+          <Tabs>
+            <TabList>
+              <Tab>mirage</Tab>
+              <Tab>cypress</Tab>
+            </TabList>
 
-            <DrawerBody>
-              <MirageToogle {...devTools} />
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
+            <TabPanels p={2}>
+              <TabPanel>
+                <MirageToogle {...devTools} />
+              </TabPanel>
+              <TabPanel>
+                <p>cypress!</p>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Box>
 
-        <DevToolsButton onClick={onToggle} variant="outline">
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          variant="outline"
+          position="fixed"
+          bottom={0}
+          right={0}
+          padding={4}
+          margin={2}
+          height="40px"
+          width="40px"
+          transition="all 0.3s"
+          zIndex={9999}
+        >
           🛠
-        </DevToolsButton>
+        </Button>
       </ThemeProvider>
     )
   }

@@ -88,7 +88,7 @@ export const MirageToogle = (props: MirageDevTools) => {
           mt={2}
         >
           {groupSpecs.map((spec) => (
-            <Radio variantColor="cyan" value={spec.id} key={spec.id}>
+            <Radio variantColor="blue" value={spec.id} key={spec.id}>
               {spec.name}
             </Radio>
           ))}
