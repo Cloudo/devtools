@@ -6,6 +6,7 @@ import { useDevSpec } from './const'
 import { CustomRadio } from './ui/CustomRadio'
 import { getSpecs, Spec } from './spec'
 import { devServer } from './server'
+import { getConfig } from '../../config'
 
 type Mode = 'api' | 'mirage'
 
@@ -19,9 +20,7 @@ const setMode = (mode: Mode) => {
 const defaultMode = typeof window === 'undefined' ? 'api' : getMode()
 
 if (defaultMode === 'mirage') {
-  import('./server').then((server) =>
-    server.makeServer({ environment: 'development' })
-  )
+  devServer()
 }
 
 type MirageDevTools = {
@@ -33,9 +32,12 @@ type MirageDevTools = {
 export const useMirageDevTools = (): MirageDevTools => {
   const specs = getSpecs()
   const [specId, setSpecId] = useDevSpec()
+
+  const getSpec = (specId: string) => specs.find((s) => s.id === specId)
+
   let spec: Spec | undefined
   if (specId) {
-    spec = specs.find((s) => s.id === specId)
+    spec = getSpec(specId)
   }
   const groups = uniq(specs.map((s) => s.group))
 
@@ -47,7 +49,21 @@ export const useMirageDevTools = (): MirageDevTools => {
     }
   }, [specId])
 
-  return { spec, setSpecId, specs, groups }
+  return {
+    spec,
+    setSpecId: (id) => {
+      setSpecId(id)
+      const spec = getSpec(id)
+      if (spec && spec.url) {
+        const { onUrlChange } = getConfig()
+        if (onUrlChange) {
+          onUrlChange(spec.url)
+        }
+      }
+    },
+    specs,
+    groups,
+  }
 }
 
 export const MirageToogle = (props: MirageDevTools) => {
@@ -71,8 +87,11 @@ export const MirageToogle = (props: MirageDevTools) => {
       </RadioButtonGroup>
 
       <Select
-        placeholder="Select group"
+        value={group}
+        placeholder="Select group..."
         onChange={(e) => setGroup(e.target.value)}
+        size="sm"
+        w={['100%', '300px']}
       >
         {groups.map((group, index) => (
           <option value={group} key={index}>

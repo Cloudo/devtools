@@ -42,7 +42,7 @@ function install() {
               <Tab>cypress</Tab>
             </TabList>
 
-            <TabPanels p={2}>
+            <TabPanels p={4}>
               <TabPanel>
                 <MirageToogle {...devTools} />
               </TabPanel>
