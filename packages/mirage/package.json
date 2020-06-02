@@ -38,5 +38,8 @@
     "tslib": "^2.0.0",
     "typescript": "^3.9.3",
     "use-local-storage-state": "^3.0.1"
+  },
+  "dependencies": {
+    "miragejs": "^0.1.40"
   }
 }
