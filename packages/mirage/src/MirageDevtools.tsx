@@ -6,7 +6,8 @@ import { useDevSpec } from './const'
 import { CustomRadio } from './ui/CustomRadio'
 import { getSpecs, Spec } from './spec'
 import { devServer } from './server'
-import { getConfig } from '../../config'
+import { Server, Response } from 'miragejs'
+import { Config } from './types'
 
 type Mode = 'api' | 'mirage'
 
@@ -20,7 +21,27 @@ const setMode = (mode: Mode) => {
 const defaultMode = typeof window === 'undefined' ? 'api' : getMode()
 
 if (defaultMode === 'mirage') {
-  devServer()
+  // @ts-ignore
+  if (window.Cypress) {
+    let cyServer = new Server({
+      routes() {
+        const methods = ['get', 'put', 'patch', 'post', 'delete'] as const
+        methods.forEach((method) => {
+          // @ts-ignore
+          this[method]('/*', async (schema, request) => {
+            // @ts-ignore
+            let [status, headers, body] = await window.handleFromCypress(
+              request
+            )
+            return new Response(status, headers, body)
+          })
+        })
+      },
+    })
+    cyServer.logging = false
+  } else {
+    devServer()
+  }
 }
 
 type MirageDevTools = {
@@ -29,7 +50,7 @@ type MirageDevTools = {
   setSpecId: (id: string) => void
   groups: string[]
 }
-export const useMirageDevTools = (): MirageDevTools => {
+export const useMirageDevTools = (config: Config): MirageDevTools => {
   const specs = getSpecs()
   const [specId, setSpecId] = useDevSpec()
 
@@ -55,9 +76,8 @@ export const useMirageDevTools = (): MirageDevTools => {
       setSpecId(id)
       const spec = getSpec(id)
       if (spec && spec.url) {
-        const { onUrlChange } = getConfig()
-        if (onUrlChange) {
-          onUrlChange(spec.url)
+        if (config.onUrlChange) {
+          config.onUrlChange(spec.url)
         }
       }
     },
@@ -66,8 +86,8 @@ export const useMirageDevTools = (): MirageDevTools => {
   }
 }
 
-export const MirageToogle = (props: MirageDevTools) => {
-  const { groups, spec, specs, setSpecId } = props
+export const MirageDevtools = (props: Config) => {
+  const { groups, spec, specs, setSpecId } = useMirageDevTools(props)
   const [group, setGroup] = useState<string>(spec?.group!)
 
   const groupSpecs = specs.filter((s) => s.group === group)
@@ -91,7 +111,8 @@ export const MirageToogle = (props: MirageDevTools) => {
         placeholder="Select group..."
         onChange={(e) => setGroup(e.target.value)}
         size="sm"
-        w={['100%', '300px']}
+        w="100%"
+        maxWidth="350px"
       >
         {groups.map((group, index) => (
           <option value={group} key={index}>

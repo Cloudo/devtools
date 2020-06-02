@@ -1,4 +1,4 @@
-import { getSpec } from '../../dist'
+import { getSpec } from '../../packages/mirage/dist'
 
 const spec = getSpec({
   group: 'github reppos',

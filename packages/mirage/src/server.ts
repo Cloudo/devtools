@@ -1,5 +1,5 @@
 import { Server } from 'miragejs'
-import { getConfig } from '../../config'
+import { Config } from './types'
 
 export function makeServerDefault(options: {
   environment?: 'test' | 'development'
@@ -13,8 +13,8 @@ export function makeServerDefault(options: {
 
 let server: Server
 
-export const devServer = () => {
-  const { makeServer = makeServerDefault } = getConfig()
+export const devServer = (config?: Config) => {
+  const { makeServer = makeServerDefault } = config || {}
   if (server) server.shutdown()
   server = makeServer({ environment: 'development' })
   return server

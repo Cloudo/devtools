@@ -1,8 +1,8 @@
 import { install } from './install'
 import { load } from './load'
 import { setConfig } from './config'
+import { DevTools } from './DevTools'
 
-export { getSpec } from './plugins/mirage/spec'
-export { useDevSpec } from './plugins/mirage/const'
+export { load, install, setConfig }
 
-export default { load, install, setConfig }
+export default DevTools

@@ -1,8 +1,10 @@
-import 'react-app-polyfill/ie11'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { useQuery, ReactQueryConfigProvider } from 'react-query'
-import devtools, { useDevSpec } from '../dist'
+import DevTools from '../dist'
+import MirageDevTools, { useDevSpec } from '../packages/mirage/dist'
+import CypressRecorder from '../packages/cypress-recorder/dist'
+import { FormExample } from './FormExample'
 import './devtools'
 
 const fetchRepos = () => {
@@ -34,6 +36,12 @@ const Repos = () => {
 const queryConfig = {
   refetchAllOnWindowFocus: false,
 }
+
+const plugins = [
+  { name: 'MirageJs', component: <MirageDevTools /> },
+  { name: 'Cypress recorder', component: <CypressRecorder /> },
+]
+
 const App = () => {
   const [specName] = useDevSpec()
   const appKey = specName || 'app'
@@ -42,9 +50,13 @@ const App = () => {
     <ReactQueryConfigProvider config={queryConfig}>
       <div key={appKey}>
         <Repos />
+
+        <FormExample />
+
+        <DevTools plugins={plugins} />
       </div>
     </ReactQueryConfigProvider>
   )
 }
 
-devtools.load(() => ReactDOM.render(<App />, document.getElementById('root')))
+ReactDOM.render(<App />, document.getElementById('root'))
